@@ -1,0 +1,148 @@
+"use client";
+
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import React, { CSSProperties, useRef, useState } from "react";
+import Typography from "@mui/material/Typography";
+import InputBase from "@mui/material/InputBase";
+import InputLabel from "@mui/material/InputLabel";
+import { SMART_CONTRACT_ADDRESS, ABI } from "@/abi";
+import { useContractWrite } from "wagmi";
+import { parseEther } from "ethers";
+
+const DonateFieldStyle: CSSProperties = {
+  padding: "20px",
+  fontSize: "20px",
+  fontStyle: "normal",
+  fontWeight: 400,
+  lineHeight: "normal",
+};
+
+const InputLabelStyle: CSSProperties = {
+  display: "flex",
+  padding: "10px",
+  textAlign: "center",
+  justifyContent: "center",
+  alignItems: "center",
+  alignSelf: "center",
+  borderRadius: "16px",
+  gap: "10px",
+  height: "32px",
+  width: "113px",
+  fontSize: "20px",
+  fontStyle: "normal",
+  lineHeight: "normal",
+};
+
+const ButtonStyle: CSSProperties = {
+  textTransform: "none",
+  color: "var(--Select-token, #FB118E)",
+  textAlign: "center",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "normal",
+  background: "#FFD4EB",
+  fontSize: "20px",
+  borderRadius: "19px",
+  width: "446px",
+  height: "58px",
+  flexShrink: 0,
+};
+
+export default function Donate() {
+  const [address, setAddress] = useState<string>();
+  const [amount, setAmount] = useState<string>();
+
+  const { writeAsync: transferDonate } = useContractWrite({
+    address: SMART_CONTRACT_ADDRESS,
+    abi: ABI,
+    functionName: "transferDonate",
+    args: [address, parseEther(String(amount || 0))],
+  });
+
+  const donateToken = async () => {
+    if (amount) {
+      await transferDonate();
+    }
+  };
+
+  return (
+    <Box
+      component="form"
+      sx={{
+        flexShrink: 0,
+        borderRadius: "15px",
+        border: "1px solid var(--Background-stroke-main-swap, #D2D9EE)",
+        background: "var(--Background-main-swap, #FFF)",
+        padding: "10px",
+        marginTop: "74px",
+        display: "grid",
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <Typography
+        sx={{
+          fontSize: "16px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",
+          marginLeft: "12px",
+          marginTop: "11px",
+          marginBottom: "15px",
+        }}
+      >
+        Donate
+      </Typography>
+
+      <div className="flex flex-shrink rounded-[12px] w-[446px] h-[101px] bg-[#F5F6FC] mb-[4px]">
+        <InputBase
+          name="address"
+          placeholder="Enter address..."
+          color="secondary"
+          autoFocus
+          style={DonateFieldStyle}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        <InputLabel
+          style={InputLabelStyle}
+          sx={{
+            color: "#000000",
+            fontWeight: 500,
+            textJustify: "center",
+            background: "var(--Select-token, #E9F0FE)",
+          }}
+        >
+          Address
+        </InputLabel>
+      </div>
+
+      <div className="flex flex-shrink rounded-[12px] w-[446px] h-[101px] bg-[#F5F6FC] mb-[4px]">
+        <InputBase
+          name="amount"
+          type="number"
+          color="secondary"
+          autoFocus
+          style={DonateFieldStyle}
+          defaultValue={"0"}
+          maxRows={20}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <InputLabel
+          style={InputLabelStyle}
+          sx={{
+            background: "var(--Select-token, #FB118E)",
+            color: "#FFF",
+            fontWeight: 600,
+            textJustify: "center",
+          }}
+        >
+          Value
+        </InputLabel>
+      </div>
+      <Button style={ButtonStyle} onClick={donateToken}>
+        Donate
+      </Button>
+    </Box>
+  );
+}
