@@ -56,7 +56,7 @@ const CustomePagination: React.FC<CustomePaginationProps> = ({
   handleChangePage,
 }) => {
   const [totalPage, setTotalPage] = useState<number>(
-    Math.round(count / rowsPerPage + 1)
+    Math.ceil(count / rowsPerPage)
   );
 
   const RowsPerPageArr: MenuItemType[] = [
@@ -80,7 +80,7 @@ const CustomePagination: React.FC<CustomePaginationProps> = ({
 
   useEffect(() => {
     if (Math.round(count / rowsPerPage) !== 0)
-      setTotalPage(Math.round(count / rowsPerPage + 1));
+      setTotalPage(Math.ceil(count / rowsPerPage));
   }, [count, rowsPerPage]);
 
   return (
