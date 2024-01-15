@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import React, { useCallback, useState } from "react";
+import { useConnect } from "wagmi";
 import { Button, SxProps, Typography } from "@mui/material";
 import SideBar from "./SideBar";
 
@@ -17,7 +17,6 @@ type ConnectButtonProps = {
 };
 
 const ConnectButton: React.FC<ConnectButtonProps> = ({ ButtonStyle }) => {
-  const { address } = useAccount();
   const { connect, connectors } = useConnect();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -47,7 +46,7 @@ const ConnectButton: React.FC<ConnectButtonProps> = ({ ButtonStyle }) => {
         console.log(e);
       }
     }
-  }, [connect]);
+  }, [connect, connectors]);
 
   return (
     <>

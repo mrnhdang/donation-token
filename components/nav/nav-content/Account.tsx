@@ -22,7 +22,7 @@ import Avalance from "@/public/avalanche-avax-logo.svg";
 import Celo from "@/public/celo-logo.svg";
 import DropdownButton from "@/generic/DropdownButton";
 import { MenuItemType } from "@/interface";
-import { ABI, SMART_CONTRACT_ADDRESS } from "@/abi";
+import { SMART_CONTRACT_ADDRESS } from "@/abi";
 import { SxProps } from "@mui/material";
 
 const CoinList: MenuItemType[] = [

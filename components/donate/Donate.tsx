@@ -55,7 +55,7 @@ export default function Donate() {
   const [amount, setAmount] = useState<string>("0");
 
   const { writeAsync: transferDonate } = useContractWrite({
-    address: SMART_CONTRACT_ADDRESS,
+    address: SMART_CONTRACT_ADDRESS as `0x${string}`,
     abi: ABI,
     functionName: "transferDonate",
     args: [address, amount || 0],

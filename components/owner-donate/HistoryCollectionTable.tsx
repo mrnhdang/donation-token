@@ -2,7 +2,6 @@
 import { ABI, SMART_CONTRACT_ADDRESS } from "@/abi";
 import CustomePagination from "@/generic/CustomePagination";
 import {
-  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -10,8 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { log } from "console";
-import { ethers, parseEther } from "ethers";
 import { isEmpty } from "lodash";
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { useAccount, useContractRead } from "wagmi";
@@ -20,10 +17,6 @@ interface Data {
   id: string;
   address: string;
   amount: number;
-}
-
-function createData(id: string, address: string, amount: number): Data {
-  return { id, address, amount };
 }
 
 const columns = [
