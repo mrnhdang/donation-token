@@ -1,5 +1,5 @@
 export const SMART_CONTRACT_ADDRESS =
-  "0x8EB79fCb3d6B2d4A9bBeF0edEa1449537b7f5748";
+  process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
 export const ABI = [
   {
     inputs: [

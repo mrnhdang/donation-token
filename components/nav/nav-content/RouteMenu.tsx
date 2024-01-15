@@ -26,7 +26,7 @@ export default function RouteMenu() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-1 flex-row align-middle items-center p-[10px] w-[50%]">
+    <div className="flex flex-1 flex-row align-middle items-center p-[10px] w-[300px]">
       {ROUTE_LIST.map((item: ItemMenu) => (
         <Typography
           key={item.key}

@@ -10,7 +10,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai, mainnet, goerli, sepolia],
   [
     alchemyProvider({
-      apiKey: "DdBfYh4BAjotTUWS45azEn-NH9zdwG-X" as string,
+      apiKey: process.env.NEXT_PUBLIC_AICHEMY_MUMBAI_SECRET_KEY as string,
     }),
     publicProvider(),
   ],

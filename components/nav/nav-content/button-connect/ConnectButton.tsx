@@ -1,22 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 import { useAccount, useConnect } from "wagmi";
 import { Button, SxProps, Typography } from "@mui/material";
 import SideBar from "./SideBar";
-
-const ButtonStyle: SxProps = {
-  textTransform: "none",
-  display: "flex",
-  width: "90px",
-  height: "40px",
-  padding: "10px",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "20px",
-  border: "1px solid #FFFFFF",
-  background: "#FFD4EB",
-};
 
 const TextStyle: SxProps = {
   color: "var(--Select-token, #FB118E)",
@@ -26,7 +12,11 @@ const TextStyle: SxProps = {
   lineHeight: "normal",
 };
 
-export default function ConnectButton() {
+type ConnectButtonProps = {
+  ButtonStyle: SxProps | undefined;
+};
+
+const ConnectButton: React.FC<ConnectButtonProps> = ({ ButtonStyle }) => {
   const { address } = useAccount();
   const { connect, connectors } = useConnect();
   const [open, setOpen] = useState<boolean>(false);
@@ -75,4 +65,5 @@ export default function ConnectButton() {
       />
     </>
   );
-}
+};
+export default ConnectButton;

@@ -7,8 +7,8 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import { SMART_CONTRACT_ADDRESS, ABI } from "@/abi";
-import { useContractWrite } from "wagmi";
-import { parseEther } from "ethers";
+import { useAccount, useContractWrite } from "wagmi";
+import { SxProps } from "@mui/material";
 
 const DonateFieldStyle: CSSProperties = {
   padding: "20px",
@@ -34,7 +34,7 @@ const InputLabelStyle: CSSProperties = {
   lineHeight: "normal",
 };
 
-const ButtonStyle: CSSProperties = {
+const ButtonStyleSx: SxProps = {
   textTransform: "none",
   color: "var(--Select-token, #FB118E)",
   textAlign: "center",
@@ -50,19 +50,22 @@ const ButtonStyle: CSSProperties = {
 };
 
 export default function Donate() {
+  const account = useAccount();
   const [address, setAddress] = useState<string>();
-  const [amount, setAmount] = useState<string>();
+  const [amount, setAmount] = useState<string>("0");
 
   const { writeAsync: transferDonate } = useContractWrite({
     address: SMART_CONTRACT_ADDRESS,
     abi: ABI,
     functionName: "transferDonate",
-    args: [address, parseEther(String(amount || 0))],
+    args: [address, amount || 0],
   });
 
   const donateToken = async () => {
-    if (amount) {
+    try {
       await transferDonate();
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -140,7 +143,12 @@ export default function Donate() {
           Value
         </InputLabel>
       </div>
-      <Button style={ButtonStyle} onClick={donateToken}>
+
+      <Button
+        sx={ButtonStyleSx}
+        onClick={donateToken}
+        disabled={!account?.address}
+      >
         Donate
       </Button>
     </Box>

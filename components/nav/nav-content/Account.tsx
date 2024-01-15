@@ -23,7 +23,7 @@ import Celo from "@/public/celo-logo.svg";
 import DropdownButton from "@/generic/DropdownButton";
 import { MenuItemType } from "@/interface";
 import { ABI, SMART_CONTRACT_ADDRESS } from "@/abi";
-import { parseEther } from "ethers";
+import { SxProps } from "@mui/material";
 
 const CoinList: MenuItemType[] = [
   {
@@ -60,6 +60,19 @@ const CoinList: MenuItemType[] = [
   },
 ];
 
+const ButtonStyle: SxProps = {
+  textTransform: "none",
+  display: "flex",
+  width: "90px",
+  height: "40px",
+  padding: "10px",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "20px",
+  border: "1px solid #FFFFFF",
+  background: "#FFD4EB",
+};
+
 export const Account = () => {
   const account = useAccount();
   const { disconnectAsync } = useDisconnect();
@@ -69,10 +82,10 @@ export const Account = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { data: tokenBalance, isLoading } = useContractRead({
-    address: SMART_CONTRACT_ADDRESS,
+    address: SMART_CONTRACT_ADDRESS as `0x${string}`,
     abi: erc20ABI,
     functionName: "balanceOf",
-    args: ["0x1AAE32eAe8CCF374347762108E84Ce307c65E8bf"],
+    args: [account.address as `0x${string}`],
   });
 
   const disconnectWallet = async () => {
@@ -90,11 +103,6 @@ export const Account = () => {
   };
 
   useEffect(() => {
-    // const localAddress = localStorage.getItem("address");
-    // const isConnected = localStorage.getItem("wagmi.connected");
-    // if (!isConnected) {
-    //   localStorage.removeItem("address");
-    // }
     setAccountAddress(account.address || "");
   }, [account]);
 
@@ -177,7 +185,7 @@ export const Account = () => {
           </IconButton>
         </Tooltip>
       ) : (
-        <ConnectButton />
+        <ConnectButton ButtonStyle={ButtonStyle} />
       )}
 
       <Menu
@@ -227,7 +235,7 @@ export const Account = () => {
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
-            {parseEther(tokenBalance?.toString())?.toString()}
+            {tokenBalance?.toString()}
           </MenuItem>
         )}
 

@@ -1,4 +1,5 @@
 "use client";
+import { ABI, SMART_CONTRACT_ADDRESS } from "@/abi";
 import CustomePagination from "@/generic/CustomePagination";
 import {
   Pagination,
@@ -9,7 +10,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { CSSProperties, useMemo, useState } from "react";
+import { log } from "console";
+import { ethers, parseEther } from "ethers";
+import { isEmpty } from "lodash";
+import React, { CSSProperties, useEffect, useMemo, useState } from "react";
+import { useAccount, useContractRead } from "wagmi";
 
 interface Data {
   id: string;
@@ -20,18 +25,6 @@ interface Data {
 function createData(id: string, address: string, amount: number): Data {
   return { id, address, amount };
 }
-
-const rows = [
-  createData("#1231", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 159),
-  createData("#1232", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 237),
-  createData("#1233", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 262),
-  createData("#1234", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 305),
-  createData("#1235", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 353),
-  createData("#1236", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 3),
-  createData("#1237", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 24),
-  createData("#1238", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 3233),
-  createData("#1239", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 4),
-];
 
 const columns = [
   {
@@ -96,11 +89,36 @@ const TableRowTextStyle: CSSProperties = {
 };
 
 export default function HistoryCollectionTable() {
+  const account = useAccount();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState<Data[]>([]);
+
+  const { data: transactionList, error } = useContractRead({
+    address: SMART_CONTRACT_ADDRESS as `0x${string}`,
+    abi: ABI,
+    functionName: "getHistory",
+  });
+
+  useEffect(() => {
+    const getTransactionHistory = () => {
+      if (Array.isArray(transactionList) && !isEmpty(transactionList)) {
+        setRows(
+          transactionList.map((item: any) => {
+            return {
+              id: item.id_,
+              address: item.address_,
+              amount: item.amount_,
+            };
+          })
+        );
+      }
+    };
+    getTransactionHistory();
+  }, [account.address, transactionList]);
 
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
@@ -137,7 +155,7 @@ export default function HistoryCollectionTable() {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [rows, order, orderBy, page, rowsPerPage]
   );
 
   return (
@@ -184,7 +202,9 @@ export default function HistoryCollectionTable() {
               >
                 <TableCell sx={TableRowTextStyle}>{row.id}</TableCell>
                 <TableCell sx={TableRowTextStyle}>{row.address}</TableCell>
-                <TableCell sx={TableRowTextStyle}>{row.amount}</TableCell>
+                <TableCell sx={TableRowTextStyle}>
+                  {row.amount.toString()}
+                </TableCell>
               </TableRow>
             );
           })}
