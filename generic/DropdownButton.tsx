@@ -29,7 +29,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   MenuStyle,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<string>();
+  const [selected, setSelected] = useState<string>(menuItem[0]?.name);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

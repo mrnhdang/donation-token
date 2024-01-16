@@ -66,12 +66,19 @@ const CustomePagination: React.FC<CustomePaginationProps> = ({
   ];
 
   const createPageItems = useCallback(() => {
-    const tempArr = [];
-    for (let i = 0; i < totalPage; i++) {
-      tempArr.push({
-        name: `${i + 1}`,
-        onClick: () => handleChangePage(i),
-      });
+    const tempArr = [
+      {
+        name: "1",
+        onClick: () => handleChangePage(0),
+      },
+    ];
+    if (totalPage > 0) {
+      for (let i = 1; i < totalPage; i++) {
+        tempArr.push({
+          name: `${i + 1}`,
+          onClick: () => handleChangePage(i),
+        });
+      }
     }
     return tempArr;
   }, [handleChangePage, totalPage]);

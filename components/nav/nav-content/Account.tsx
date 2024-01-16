@@ -24,6 +24,7 @@ import DropdownButton from "@/generic/DropdownButton";
 import { MenuItemType } from "@/interface";
 import { SMART_CONTRACT_ADDRESS } from "@/abi";
 import { SxProps } from "@mui/material";
+import { ethers } from "ethers";
 
 const CoinList: MenuItemType[] = [
   {
@@ -235,7 +236,7 @@ export const Account = () => {
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
-            {tokenBalance?.toString()}
+            {ethers.formatEther(tokenBalance?.toString())}
           </MenuItem>
         )}
 
